@@ -26,6 +26,19 @@
         </div>
     </div>
 
+    <div class="card text-center mx-auto mt-4" style="width: 26rem;">
+        <div class="card-header">Oefenen</div>
+        <div class="card-body">
+            <p class="mb-1">Oefen de tafel van <strong id="oefenTafel">–</strong></p>
+            <p id="vraag" class="fs-4 fw-bold">Klik op "Start oefenen"</p>
+            <input type="number" id="antwoordInput" class="form-control w-50 mx-auto">
+            <button onclick="startOefenen()" class="btn btn-primary mt-2">Start oefenen</button>
+            <button onclick="checkAntwoord()" class="btn btn-success mt-2">Controleer</button>
+            <p id="feedback" class="mt-2 mb-0"></p>
+            <p class="text-muted mt-2 mb-0">Score: <span id="score">0</span> / <span id="pogingen">0</span></p>
+        </div>
+    </div>
+
     <script>
         function toonTafel() {
             let getal = document.getElementById("tafelGetal").value;
@@ -36,6 +49,49 @@
             }
 
             document.getElementById("tafelLijst").innerHTML = inhoud;
+        }
+
+        let oefenGetal = 1;
+        let score = 0;
+        let pogingen = 0;
+
+        function startOefenen() {
+            oefenGetal = parseInt(document.getElementById("tafelGetal").value) || 1;
+            score = 0;
+            pogingen = 0;
+            document.getElementById("score").textContent = 0;
+            document.getElementById("pogingen").textContent = 0;
+            document.getElementById("oefenTafel").textContent = oefenGetal;
+            volgendeVraag();
+        }
+
+        function volgendeVraag() {
+            let i = Math.floor(Math.random() * 10) + 1;
+            document.getElementById("vraag").textContent = oefenGetal + " × " + i + " = ?";
+            document.getElementById("vraag").dataset.antwoord = oefenGetal * i;
+            document.getElementById("antwoordInput").value = "";
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("antwoordInput").focus();
+        }
+
+        function checkAntwoord() {
+            let antwoord = parseInt(document.getElementById("antwoordInput").value);
+            let goed = parseInt(document.getElementById("vraag").dataset.antwoord);
+
+            pogingen++;
+            let feedback = document.getElementById("feedback");
+            if (antwoord === goed) {
+                score++;
+                feedback.textContent = "Goed! 🎉";
+                feedback.className = "mt-2 mb-0 text-success fw-bold";
+            } else {
+                feedback.textContent = "Fout. Het antwoord is " + goed + ".";
+                feedback.className = "mt-2 mb-0 text-danger fw-bold";
+            }
+            document.getElementById("score").textContent = score;
+            document.getElementById("pogingen").textContent = pogingen;
+
+            setTimeout(volgendeVraag, 1200);
         }
     </script>
 
